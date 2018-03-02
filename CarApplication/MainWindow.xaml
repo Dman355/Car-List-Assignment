@@ -1,0 +1,160 @@
+﻿<Window x:Class="CarApplication.MainWindow" Background="#252839"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CarApplication"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="420" Width="660"
+        Loaded="Window_Loaded">
+    <Window.Resources>
+        <!--#region styles-->
+        <Style x:Key="ActionButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="DarkGray"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Width" Value="70"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="{x:Null}"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="CarDetailsStackStyle" TargetType="StackPanel">
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="Orientation" Value="Horizontal"/>
+        </Style>
+        <Style x:Key="CarDetailsLabelStyle" TargetType="Label">
+            <Setter Property="Foreground" Value="LightGray"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Width" Value="100"/>
+        </Style>
+        <Style x:Key="CarDetailsTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="LightGray"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Width" Value="100"/>
+        </Style>
+        <!--#endregion styles -->
+        <!--#region binding -->
+        <DataTemplate x:Key="ListboxCars">
+            <StackPanel Orientation="Horizontal">
+                <Image Name="VehicleTypeImage" Source="{Binding TypeImage}" />
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Make: " FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Make}" Width="50"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Model: " FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Model}" Width="50"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Price: " FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Price}" Width="50"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Mileage: " FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Mileage}" Width="50"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+                <Grid>
+                    <Rectangle Width="50" Height="50" Fill="{Binding Colour}" Stroke="Gray" StrokeThickness="2"/>
+                    <TextBlock Text="{Binding Colour}" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+        <!--#endregion-->
+    </Window.Resources>
+    <Grid>
+        <DockPanel LastChildFill="True">
+            <Border DockPanel.Dock="Top" BorderBrush="#F2B632" CornerRadius="6" BorderThickness="4" Margin="4">
+                <Grid Height="50">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Image VerticalAlignment="Center" Width="25" Source="/images/categories/all.png"/>
+                        <RadioButton Foreground="#f2b632" Name="RadioAll" VerticalAlignment="Center" Content="All" GroupName="categories" Checked="RadioAll_Checked" IsChecked="True"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
+                        <Image VerticalAlignment="Center" Width="40" Source="/images/categories/car.png"/>
+                        <RadioButton Foreground="#f2b632" Name="RadioCars" VerticalAlignment="Center" Content="Car" GroupName="categories" Checked="RadioCars_Checked"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Center" >
+                        <Image VerticalAlignment="Center" Width="40" Source="images/categories/bike.png"/>
+                        <RadioButton Foreground="#f2b632" Name="RadioBikes" VerticalAlignment="Center" Content="Bikes" GroupName="categories" Checked="RadioBikes_Checked"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Center">
+                        <Image VerticalAlignment="Center" Width="40" Source="images/categories/van.png"/>
+                        <RadioButton Foreground="#f2b632" Name="RadioVans" VerticalAlignment="Center" Content="Vans" GroupName="categories" Checked="RadioVans_Checked"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <StackPanel DockPanel.Dock="Bottom" Height="50" Width="400" Orientation="Horizontal">
+                <Button Name="BtnLoad" Style="{StaticResource ActionButtonStyle}" Content="Load" Margin="5,0" Click="BtnLoad_Click"/>
+                <Button Name="BtnSave" Style="{StaticResource ActionButtonStyle}" Content="Save" Margin="5,0" Click="BtnSave_Click"/>
+                <Button Name="BtnAdd" Style="{StaticResource ActionButtonStyle}" Content="Add Car" Margin="5,0" Click="BtnAdd_Click"/>
+                <Button Name="BtnEdit" Style="{StaticResource ActionButtonStyle}" Content="Edit" Margin="5,0" Click="BtnEdit_Click"/>
+                <Button Name="BtnDelete" Style="{StaticResource ActionButtonStyle}" Content="Delete" Margin="5,0" Click="BtnDelete_Click"/>
+            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="400"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="Sort By" Foreground="White" VerticalAlignment="Center"/>
+                    <ComboBox Name="CboSortBy" Height="22" Width="150" SelectionChanged="CboSortBy_SelectionChanged"/>
+                </StackPanel>
+                <ListBox Name="ListboxVehicles" Grid.Row="1" Margin="20" ItemTemplate="{StaticResource ListboxCars}" SelectionChanged="ListboxVehicles_SelectionChanged" SelectedIndex="0" />
+                <TextBlock Grid.Column="1" Text="Vehicle Details" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" Foreground="LightGray"/>
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Image Name="DisplayImage"/>
+                    <StackPanel Grid.Row="1" Margin="40,0">
+                        <StackPanel Style="{StaticResource CarDetailsStackStyle}">
+                            <Label Content="Make:" Style="{StaticResource CarDetailsLabelStyle}"/>
+                            <TextBlock Name="DisplayMake" Style="{StaticResource CarDetailsTextStyle}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource CarDetailsStackStyle}">
+                            <Label Content="Model:" Style="{StaticResource CarDetailsLabelStyle}"/>
+                            <TextBlock Name="DisplayModel" Style="{StaticResource CarDetailsTextStyle}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource CarDetailsStackStyle}">
+                            <Label Content="Price:" Style="{StaticResource CarDetailsLabelStyle}"/>
+                            <TextBlock Name="DisplayPrice" Style="{StaticResource CarDetailsTextStyle}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource CarDetailsStackStyle}">
+                            <Label Content="Year:" Style="{StaticResource CarDetailsLabelStyle}"/>
+                            <TextBlock Name="DisplayYear" Style="{StaticResource CarDetailsTextStyle}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource CarDetailsStackStyle}">
+                            <Label Content="Mileage:" Style="{StaticResource CarDetailsLabelStyle}"/>
+                            <TextBlock Name="DisplayMileage" Style="{StaticResource CarDetailsTextStyle}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource CarDetailsStackStyle}" Height="25">
+                            <Label Content="Description:" Style="{StaticResource CarDetailsLabelStyle}" VerticalAlignment="Top"/>
+                            <TextBlock Name="DisplayDescription" Style="{StaticResource CarDetailsTextStyle}" TextWrapping="WrapWithOverflow"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource CarDetailsStackStyle}">
+                            <Label Content="Engine:" Style="{StaticResource CarDetailsLabelStyle}"/>
+                            <TextBlock Name="DisplayEngine" Style="{StaticResource CarDetailsTextStyle}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>
